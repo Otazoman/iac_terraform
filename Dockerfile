@@ -53,7 +53,6 @@ RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 ENV PATH $PATH:~/.pyenv/bin
 ENV PATH $PATH:~/.pyenv/shims
-#RUN pyenv global 3.9.2
 RUN pyenv install $python_ver
 RUN pyenv install $python_old_ver
 RUN pyenv global $python_ver
