@@ -41,8 +41,6 @@ ENV PATH $PATH:~/.rbenv/shims
 RUN rbenv install $ruby_ver
 RUN rbenv global $ruby_ver
 ENV RUBYOPT -EUTF-8
-#RUN rbenv install $(rbenv install -l | grep -v - | tail -1)
-#RUN rbenv global 3.0.0
 
 #Python Install
 ARG python_ver
@@ -61,9 +59,6 @@ RUN pyenv install $python_old_ver
 RUN pyenv global $python_ver
 RUN pyenv rehash
 RUN pip install --upgrade pip
-#RUN pyenv install $(pyenv install -l | grep -v '[a-zA-Z]' | grep -e '\s3\.?*' | tail -1)
-#RUN pyenv install 3.7.10
-#RUN pyenv install 3.8.8
 
 #AWS-CLI
 RUN apt-get -y install jq
