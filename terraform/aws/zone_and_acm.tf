@@ -1,6 +1,6 @@
 resource "aws_acm_certificate" "cert" {
-  provider = aws.us-east-1   
-  domain_name = var.root_domain
+  provider          = aws.us-east-1
+  domain_name       = var.root_domain
   validation_method = "DNS"
 
   subject_alternative_names = [
@@ -18,22 +18,14 @@ resource "aws_acm_certificate" "cert" {
   }
 }
 
-#output "domain_validation_options" {
-#  value = "${aws_acm_certificate.cert.domain_validation_options}"
-#}
-
 resource "aws_route53_zone" "zone" {
-  name         = var.root_domain
+  name = var.root_domain
   tags = {
     ManagedBy = "terraform"
     Changed   = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
-    Name = var.root_domain
+    Name      = var.root_domain
   }
 }
-
-#output "domain_zone" {
-#  value = "${aws_route53_zone.zone}"
-#}
 
 resource "aws_route53_record" "validations" {
   for_each = {
@@ -53,7 +45,8 @@ resource "aws_route53_record" "validations" {
 }
 
 resource "aws_acm_certificate_validation" "acm_validation" {
-  provider = aws.us-east-1   
+  provider                = aws.us-east-1
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.validations : record.fqdn]
+  #depends_on = [aws_cloudfront_distribution.static-site-dst, aws_s3_bucket.static-site]
 }

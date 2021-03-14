@@ -19,8 +19,8 @@ data "aws_iam_policy_document" "cloudfront-logging-bucket" {
 }
 
 resource "aws_s3_bucket" "cloudfront-logging" {
-  bucket = "${var.bucket_name}-cloudfront-logs"
-  policy = data.aws_iam_policy_document.cloudfront-logging-bucket.json
+  bucket        = "${var.bucket_name}-cloudfront-logs"
+  policy        = data.aws_iam_policy_document.cloudfront-logging-bucket.json
   request_payer = "BucketOwner"
 }
 
@@ -46,12 +46,12 @@ resource "aws_s3_bucket" "website-logs" {
 
 resource "aws_s3_bucket" "static-site" {
   bucket = var.bucket_name
-  acl = "private"
+  acl    = "private"
   policy = data.aws_iam_policy_document.static-site-bucket_policy.json
   versioning {
-    enabled    = true
+    enabled = true
   }
-    logging {
+  logging {
     target_bucket = aws_s3_bucket.website-logs.bucket
     target_prefix = "${var.bucket_name}/"
   }
@@ -61,23 +61,23 @@ resource "aws_s3_bucket" "static-site" {
 }
 
 locals {
-    s3-origin-id-static-site = "s3-origin-id-static-site"
+  s3-origin-id-static-site = "s3-origin-id-static-site"
 }
 
 data "aws_iam_policy_document" "static-site-bucket_policy" {
-    statement {
-        sid    = ""
-        effect = "Allow"
-        principals {
-            type        = "AWS"
-            identifiers = ["${aws_cloudfront_origin_access_identity.static-site-idntity.iam_arn}"]
-        }
-        actions = [
-            "s3:GetObject"
-        ]
-        resources = [
-            "arn:aws:s3:::${var.bucket_name}",
-            "arn:aws:s3:::${var.bucket_name}/*"
-        ]
+  statement {
+    sid    = ""
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["${aws_cloudfront_origin_access_identity.static-site-idntity.iam_arn}"]
     }
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.bucket_name}",
+      "arn:aws:s3:::${var.bucket_name}/*"
+    ]
+  }
 }
